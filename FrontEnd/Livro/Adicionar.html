@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="index.css">
+    <title>Adicionar Livros</title>
+</head>
+<body>
+    <h1>Adicione um novo livro ao Catálogo</h1>
+
+    <div class="Adicionar">
+        <form id="addForm">
+            <div class="Info">
+                <label for="nome_livro">Nome do livro </label><br>
+                <input type="text" id="nome_livro" name="nome_livro" placeholder="Título do livro" required>
+            </div>
+    
+            <div class="Info">
+                <label for="ano_publicacao">Ano de publicação </label><br>
+                <input type="date" id="ano_publicacao" name="ano_publicacao" placeholder="dd/mm/aaaa" required>
+            </div>
+
+            <label for="genero">Gênero</label>
+                <select id="genero" name="genero" required>
+                    <option value="" disabled selected>Selecione um gênero</option>
+                    <option value=" ----- "> ----- </option> // Ajustar para aparecer os gêneros que já estão cadastrados no banco
+                    <option value=" ------ "> ------ </option>
+                    <option value=" ------- "> ------ </option>
+                    
+                </select><br><br>
+
+                <label for="autor">Autor</label>
+                <select id="autor" name="autor" required>
+                    <option value="" disabled selected>Selecione um gênero</option>
+                    <option value=" ----- "> ----- </option> // Ajustar para aparecer os autores que já estão cadastrados no banco
+                    <option value=" ------ "> ------ </option>
+                    <option value=" ------- "> ------ </option>
+                    <option value="link_cadastrar_autor"> <a href="Autor/Adicionar.html">Cadastrar autor</a> </option> // não sei se o link está certo
+                                                         
+                </select><br><br>
+
+            <!-- Botão Voltar -->
+            <button type="button" onclick="window.location.href='Index.php'">Voltar</button>
+            <!-- Botão para Adicionar -->
+            <button type="submit">Adicionar</button>
+        </form>
+
+        <!-- Div para exibir a mensagem -->
+        <div id="message"></div>
+    </div>
+
+    <script>
+        document.getElementById('addForm').addEventListener('submit', function(e) {
+            e.preventDefault(); // Impede o envio padrão do formulário
+
+            // Obter os valores dos campos
+            const Id_livro = document.getElementById('Id_livro').value; // não sei se aqui coloca id ou nome do livro
+            const ano_publicacao = document.getElementById('ano_publicacao').value;
+            const Id_genero = document.getElementById('Id_genero').value; 
+            const Id_autor = document.getElementById('Id_autor').value;
+            
+            // Enviar a requisição para adicionar a pessoa
+            fetch('http://localhost/primeiroprojeto/BackEnd/adicionar_pessoas.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: new URLSearchParams({ nome: nome, idade: idade })
+            })
+            .then(response => response.json())
+            .then(result => {
+                // Exibir a mensagem de sucesso ou erro
+                const messageDiv = document.getElementById('message');
+                if (result.sucesso) {
+                    messageDiv.innerHTML = `<p style="color: green;">${result.mensagem}</p>`;
+                } else {
+                    messageDiv.innerHTML = `<p style="color: red;">${result.erro}</p>`;
+                }
+
+                // Limpar os campos do formulário após sucesso
+                if (result.sucesso) {
+                    document.getElementById('addForm').reset();
+                }
+            })
+            .catch(error => {
+                console.error('Erro:', error);
+                document.getElementById('message').innerHTML = `<p style="color: red;">Ocorreu um erro ao adicionar a pessoa.</p>`;
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,66 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+}
+
+h1 {
+    color: #090909;
+    text-align: center;
+    margin-bottom: 20px;
+}
+h2 {
+    color: #090909;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.Tabela{
+    width: 30%;
+    margin: 0 auto;
+    margin-top: 100px;
+    padding: 100px;
+    background-color: #f8f9fa;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    align-items: center;
+    
+}
+
+.Adicionar{
+    width: 25%;
+    margin: 0 auto;
+    margin-top: 100px;
+    padding: 100px;
+    background-color: #f8f9fa;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    
+}
+
+button{
+    padding: 7px 20px;
+    font-size: 16px;
+    color: #fff;
+    background-color: #007bff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 25px;
+    text-decoration: none;
+}
+
+button:hover {
+    background-color: #0056b3;
+    text-decoration: none;
+}
+
+.Info {
+    margin-bottom: 20px;
+}
+
+input{
+    width: 360px;
+    height: 25px;
+}
+
+
