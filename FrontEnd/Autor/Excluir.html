@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="Index.css">
+    <title>Excluir Livro</title>
+</head>
+<body>
+    <h1>Exclua um livro pelo ID</h1>
+
+    <div class="Adicionar">
+        <form id="addForm">
+            <div class="Info">
+                <label for="id">Id </label><br>
+                <input type="number" id="id" name="id" placeholder="Id do autor" required>
+            </div>
+
+            <!-- Botão Voltar -->
+            <button type="button" onclick="window.location.href='Index.php'">Voltar</button>
+            <!-- Botão para Excluir -->
+            <button type="submit">Excluir</button>
+        </form>
+
+        <!-- Div para exibir a mensagem -->
+        <div id="message"></div>
+    </div>
+
+    <script>
+        document.getElementById('addForm').addEventListener('submit', function(e) {
+            e.preventDefault(); // Evitar o envio padrão do formulário
+
+            // Obter o valor do ID
+            const id = document.getElementById('id').value;
+
+            // Enviar a requisição para excluir a pessoa
+            fetch('http://localhost/CatalogoLivros/BackEnd/Autor/Excluir_autor.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: new URLSearchParams({ id: id })
+            })
+            .then(response => response.json())
+            .then(result => {
+                // Exibir a mensagem de sucesso ou erro
+                const messageDiv = document.getElementById('message');
+                if (result.sucesso) {
+                    messageDiv.innerHTML = `<p style="color: green;">${result.mensagem}</p>`;
+                } else {
+                    messageDiv.innerHTML = `<p style="color: red;">${result.erro}</p>`;
+                }
+            })
+            .catch(error => {
+                console.error('Erro:', error);
+                document.getElementById('message').innerHTML = `<p style="color: red;">Ocorreu um erro ao excluir a pessoa.</p>`;
+            });
+        });
+    </script>
+</body>
+</html>

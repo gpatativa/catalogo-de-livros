@@ -3,7 +3,7 @@
 header('Content-Type: application/json');
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $api_token = $_POST['api_token'];
+    $api_token = isset($_POST['api_token']) ? $_POST['api_token'] : null;
     
     if ($api_token == 'TokenTeste') {
 
@@ -20,7 +20,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
             while (mysqli_stmt_fetch($stmt)) {
                 array_push($response, array(           
-                    "Id_autor" => $Id_autor, // vírgula adicionada aqui
+                    "Id_autor" => $Id_autor,
                     "nome_autor" => $nome_autor
                 ));
             }
@@ -34,11 +34,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         mysqli_close($conn);
 
     } else {
-        $response = array('auth_token' => false);
+        $response = array('auth_token' => false, 'message' => 'Token inválido.');
         echo json_encode($response);
     }
 } else {
-    $response = array('auth_token' => false);
+    $response = array('error' => 'Método não suportado, use POST.');
     echo json_encode($response);
 }
 

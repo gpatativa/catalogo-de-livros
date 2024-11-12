@@ -13,8 +13,8 @@
     <div class="Tabela">
         <div class="Info">
             <button><a href="Adicionar.html">Adicionar</a></button>
-            <button><a href="Excluir.html">Excluir</a></button>
-            <button><a href="Editar.html">Editar</a></button>                   
+            <button><a href="Editar.html">Editar</a></button>      
+            <button><a href="Excluir.html">Excluir</a></button>             
         </div>
         <br>
 

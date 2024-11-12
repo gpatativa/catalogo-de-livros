@@ -12,34 +12,32 @@
     <div class="Adicionar">
         <form id="addForm">
             <div class="Info">
-                <label for="nome_livro">Nome do livro </label><br>
+                <label for="nome_livro">Nome do livro</label><br>
                 <input type="text" id="nome_livro" name="nome_livro" placeholder="Título do livro" required>
             </div>
     
             <div class="Info">
-                <label for="ano_publicacao">Ano de publicação </label><br>
-                <input type="date" id="ano_publicacao" name="ano_publicacao" placeholder="dd/mm/aaaa" required>
+                <label for="ano_publicacao">Ano de publicação</label><br>
+                <input type="number" id="ano_publicacao" name="ano_publicacao" placeholder="aaaa" required>
             </div>
 
-            <label for="genero">Gênero</label>
-                <select id="genero" name="genero" required>
-                    <option value="" disabled selected>Selecione um gênero</option>
-                    <option value=" ----- "> ----- </option> // Ajustar para aparecer os gêneros que já estão cadastrados no banco
-                    <option value=" ------ "> ------ </option>
-                    <option value=" ------- "> ------ </option>
-                    
-                </select><br><br>
+            <label for="Id_genero">Gênero</label>
+            <select id="Id_genero" name="Id_genero" required>
+                <option value="" disabled selected>Selecione um gênero</option>
+                <option value="1">Fantasia</option>
+                    <option value="2">Ficção</option>
+                    <option value="3">Romance</option>
+            </select><br><br>
 
-                <label for="autor">Autor</label>
-                <select id="autor" name="autor" required>
-                    <option value="" disabled selected>Selecione um gênero</option>
-                    <option value=" ----- "> ----- </option> // Ajustar para aparecer os autores que já estão cadastrados no banco
-                    <option value=" ------ "> ------ </option>
-                    <option value=" ------- "> ------ </option>
-                    <option value="link_cadastrar_autor"> <a href="Autor/Adicionar.html">Cadastrar autor</a> </option> // não sei se o link está certo
-                                                         
-                </select><br><br>
+            <label for="Id_autor">Autor</label>
+            <select id="Id_autor" name="Id_autor" required>
+                <option value="" disabled selected>Selecione um autor</option>
+                <option value="1">Autor 1</option>
+                    <option value="2">Autor 2</option>
+                    <option value="3">Autor 3</option>
+            </select><br><br>
 
+            <a href="../Autor/Adicionar.html">Cadastrar autor</a><br><br>
             <!-- Botão Voltar -->
             <button type="button" onclick="window.location.href='Index.php'">Voltar</button>
             <!-- Botão para Adicionar -->
@@ -51,22 +49,52 @@
     </div>
 
     <script>
+        // Carregar gêneros e autores ao carregar a página
+        document.addEventListener('DOMContentLoaded', function() {
+            fetch('http://localhost/CatalogoLivros/BackEnd/AdicionarLivro.php')
+                .then(response => response.json())
+                .then(data => {
+                    // Popula o campo de gênero
+                    const generoSelect = document.getElementById('Id_genero');
+                    data.generos.forEach(genero => {
+                        let option = document.createElement('option');
+                        option.value = genero.Id_genero;
+                        option.textContent = genero.nome_genero;
+                        generoSelect.appendChild(option);
+                    });
+
+                    // Popula o campo de autor
+                    const autorSelect = document.getElementById('Id_autor');
+                    data.autores.forEach(autor => {
+                        let option = document.createElement('option');
+                        option.value = autor.Id_autor;
+                        option.textContent = autor.nome_autor;
+                        autorSelect.appendChild(option);
+                    });
+                });
+        });
+
         document.getElementById('addForm').addEventListener('submit', function(e) {
             e.preventDefault(); // Impede o envio padrão do formulário
 
             // Obter os valores dos campos
-            const Id_livro = document.getElementById('Id_livro').value; // não sei se aqui coloca id ou nome do livro
+            const nome_livro = document.getElementById('nome_livro').value;
             const ano_publicacao = document.getElementById('ano_publicacao').value;
-            const Id_genero = document.getElementById('Id_genero').value; 
+            const Id_genero = document.getElementById('Id_genero').value;
             const Id_autor = document.getElementById('Id_autor').value;
             
-            // Enviar a requisição para adicionar a pessoa
-            fetch('http://localhost/primeiroprojeto/BackEnd/adicionar_pessoas.php', {
+            // Enviar a requisição para adicionar o livro
+            fetch('http://localhost/CatalogoLivros/BackEnd/AdicionarLivro.php', { 
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded'
                 },
-                body: new URLSearchParams({ nome: nome, idade: idade })
+                body: new URLSearchParams({
+                    nome_livro: nome_livro,
+                    ano_publicacao: ano_publicacao,
+                    Id_genero: Id_genero,
+                    Id_autor: Id_autor
+                })
             })
             .then(response => response.json())
             .then(result => {
@@ -85,7 +113,7 @@
             })
             .catch(error => {
                 console.error('Erro:', error);
-                document.getElementById('message').innerHTML = `<p style="color: red;">Ocorreu um erro ao adicionar a pessoa.</p>`;
+                document.getElementById('message').innerHTML = `<p style="color: red;">Ocorreu um erro ao adicionar livro.</p>`;
             });
         });
     </script>

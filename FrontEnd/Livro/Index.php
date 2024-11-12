@@ -14,8 +14,8 @@
 
         <div class="Info">
             <button><a href="Adicionar.html">Adicionar</a></button>
-            <button><a href="Excluir.html">Excluir</a></button>
-            <button><a href="Editar.html">Editar</a></button>                   
+            <button><a href="Editar.html">Editar</a></button>      
+            <button><a href="Excluir.html">Excluir</a></button>             
         </div>
         <br>
 
@@ -43,7 +43,7 @@
                     )
                 );
                 $context  = stream_context_create($opts);
-                $result = file_get_contents('http://localhost/CatalogoLivros/BackEnd/Livro/APIListarLivros.php', false, $context);
+                $result = file_get_contents("", false, $context);
 
                 // Decodifica a resposta JSON
                 $jsonObj = json_decode($result);

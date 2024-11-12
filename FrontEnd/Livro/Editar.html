@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="Index.css">
+    <title>Editar Livro</title>
+</head>
+<body>
+    <h1>Edite um livro</h1>
+
+    <div class="Adicionar">
+        <form id="editForm">
+            <div class="Info">
+                <label for="id">ID do livro</label><br>
+                <input type="text" id="id" name="id" required>
+            </div>
+    
+            <div class="Info">
+                <label for="nome_livro">Nome do livro</label><br>
+                <input type="text" id="nome_livro" name="nome_livro" placeholder="Título do livro" required>
+            </div>
+    
+            <div class="Info">
+                <label for="ano_publicacao">Ano de publicação</label><br>
+                <input type="number" id="ano_publicacao" name="ano_publicacao" required>
+            </div>
+
+            <div class="Info">
+                <label for="genero">Gênero</label>
+                <select id="genero" name="genero" required>
+                    <option value="" disabled selected>Selecione um gênero</option>
+                    <!-- Adicione os gêneros reais aqui -->
+                    <option value="1">Fantasia</option>
+                    <option value="2">Ficção</option>
+                    <option value="3">Romance</option>
+                </select>
+            </div>
+
+            <div class="Info">
+                <label for="autor">Autor</label>
+                <select id="autor" name="autor" required>
+                    <option value="" disabled selected>Selecione um autor</option>
+                    <!-- Adicione os autores reais aqui -->
+                    <option value="1">Autor 1</option>
+                    <option value="2">Autor 2</option>
+                    <option value="3">Autor 3</option>
+                </select>
+            </div>
+
+            <!-- Link para cadastrar autor -->
+            <a href="../Autor/Adicionar.html">Cadastrar autor</a> <br> <br>
+
+            <!-- Botão Voltar -->
+            <button type="button" onclick="window.location.href='Index.php'">Voltar</button>
+            <!-- Botão para Salvar Edição -->
+            <button type="submit">Salvar Edição</button>
+        </form>
+
+        <!-- Div para exibir a mensagem -->
+        <div id="message"></div>
+    </div>
+
+    <script>
+        document.getElementById('editForm').addEventListener('submit', function(e) {
+            e.preventDefault(); // Evitar o envio padrão do formulário
+
+            // Obter os dados do formulário
+            const id = document.getElementById('id').value;
+            const nome_livro = document.getElementById('nome_livro').value;
+            const ano_publicacao = document.getElementById('ano_publicacao').value;
+            const genero = document.getElementById('genero').value;
+            const autor = document.getElementById('autor').value;
+
+            // Criar o objeto com os dados para a requisição PUT
+            const data = {
+                id: id,
+                nome_livro: nome_livro,
+                ano_publicacao: ano_publicacao,
+                Id_genero: genero,
+                Id_autor: autor
+            };
+
+            // Enviar os dados via PUT usando Fetch API
+            fetch('http://localhost/CatalogoLivros/BackEnd/Editar_livro.php', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(result => {
+                // Exibir a mensagem de sucesso ou erro
+                const messageDiv = document.getElementById('message');
+                if (result.sucesso) {
+                    messageDiv.innerHTML = `<p style="color: green;">${result.mensagem}</p>`;
+                } else {
+                    messageDiv.innerHTML = `<p style="color: red;">${result.erro}</p>`;
+                }
+            })
+            .catch(error => {
+                console.error('Erro:', error);
+                document.getElementById('message').innerHTML = `<p style="color: red;">Ocorreu um erro ao tentar editar o livro.</p>`;
+            });
+        });
+    </script>
+</body>
+</html>

@@ -17,8 +17,8 @@ h2 {
 .Tabela{
     width: 30%;
     margin: 0 auto;
-    margin-top: 100px;
-    padding: 100px;
+    margin-top: 50px;
+    padding: 80px;
     background-color: #f8f9fa;
     border: 1px solid #ddd;
     border-radius: 8px;
@@ -55,8 +55,9 @@ button:hover {
 }
 
 .Info {
-    margin-bottom: 20px;
+    margin-bottom: 10px;
 }
+
 
 input{
     width: 360px;

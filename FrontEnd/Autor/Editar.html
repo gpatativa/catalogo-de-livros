@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="Index.css">
+    <title>Editar Autor</title>
+</head>
+<body>
+    <h1>Edite um autor</h1>
+
+    <div class="Adicionar">
+        <form id="addForm">
+            <div class="Info">
+                <label for="id">ID do Autor</label><br>
+                <input type="text" id="id" name="id" required>
+            </div>
+    
+            <div class="Info">
+                <label for="nome_autor">Nome do Autor</label><br>
+                <input type="text" id="nome_autor" name="nome_autor" required>
+            </div>
+    
+            <!-- Botão Voltar -->
+            <button type="button" onclick="window.location.href='Index.php'">Voltar</button>
+            <!-- Botão para Salvar Edição -->
+            <button type="submit">Salvar Edição</button>
+        </form>
+
+        <!-- Div para exibir a mensagem -->
+        <div id="message"></div>
+    </div>
+
+    <script>
+        document.getElementById('addForm').addEventListener('submit', function(e) {
+            e.preventDefault(); // Evitar o envio padrão do formulário
+
+            // Obter os dados do formulário
+            const id = document.getElementById('id').value;
+            const nome = document.getElementById('nome_autor').value; 
+            
+            // Criar o objeto com os dados para a requisição PUT
+            const data = {
+                id: id,
+                nome: nome,
+                
+            };
+
+            // Enviar os dados via PUT usando Fetch API
+            fetch('http://localhost/CatalogoLivros/BackEnd/Autor/Editar_autor.php', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(result => {
+                // Exibir a mensagem de sucesso ou erro
+                const messageDiv = document.getElementById('message');
+                if (result.sucesso) {
+                    messageDiv.innerHTML = `<p style="color: green;">${result.mensagem}</p>`;
+                } else {
+                    messageDiv.innerHTML = `<p style="color: red;">${result.erro}</p>`;
+                }
+            })
+            .catch(error => {
+                console.error('Erro:', error);
+                document.getElementById('message').innerHTML = `<p style="color: red;">Ocorreu um erro ao tentar editar o livro.</p>`;
+            });
+        });
+    </script>
+</body>
+</html>
