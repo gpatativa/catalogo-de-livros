@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 29/10/2024 às 16:04
+-- Tempo de geração: 07/11/2024 às 15:47
 -- Versão do servidor: 10.4.32-MariaDB
 -- Versão do PHP: 8.2.12
 
@@ -79,7 +79,7 @@ INSERT INTO `generos` (`Id_genero`, `nome_genero`) VALUES
 
 CREATE TABLE `livros` (
   `Id_livro` int(11) NOT NULL,
-  `nome_livro` int(11) NOT NULL,
+  `nome_livro` text NOT NULL,
   `ano_publicacao` date NOT NULL,
   `Id_autor` int(11) NOT NULL,
   `Id_genero` int(11) NOT NULL

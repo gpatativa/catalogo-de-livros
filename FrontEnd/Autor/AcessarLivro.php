@@ -12,7 +12,7 @@
         )
     );
         $context = stream_context_create($opts);
-        $result = file_get_contents ('http://localhost/CatalogoLivros/BackEnd/Livro/APIListarAutores.php', false, $context);
+        $result = file_get_contents ('http://localhost/catalogo-de-livros/BackEnd/Livro/APIListarAutores.php', false, $context);
 
         $jsonObj = json_decode ($result);
 

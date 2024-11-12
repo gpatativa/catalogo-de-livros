@@ -39,7 +39,7 @@
                     )
                 );
                 $context  = stream_context_create($opts);
-                $result = file_get_contents('http://localhost/CatalogoLivros/BackEnd/Autor/APIListarAutores.php', false, $context);
+                $result = file_get_contents('http://localhost/catalogo-de-livros/BackEnd/Autor/APIListarAutores.php', false, $context);
 
                 // Decodifica a resposta JSON
                 $jsonObj = json_decode($result);

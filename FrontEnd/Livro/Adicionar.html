@@ -51,7 +51,7 @@
     <script>
         // Carregar gêneros e autores ao carregar a página
         document.addEventListener('DOMContentLoaded', function() {
-            fetch('http://localhost/CatalogoLivros/BackEnd/AdicionarLivro.php')
+            fetch('http://localhost/catalogo-de-livros/BackEnd/AdicionarLivro.php')
                 .then(response => response.json())
                 .then(data => {
                     // Popula o campo de gênero
@@ -84,7 +84,7 @@
             const Id_autor = document.getElementById('Id_autor').value;
             
             // Enviar a requisição para adicionar o livro
-            fetch('http://localhost/CatalogoLivros/BackEnd/AdicionarLivro.php', { 
+            fetch('http://localhost/catalogo-de-livros/BackEnd/AdicionarLivro.php', { 
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded'
