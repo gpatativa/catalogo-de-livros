@@ -1,0 +1,57 @@
+/* Estilo do corpo da página */
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+    background-color: #f4f4f4;
+}
+
+/* Título principal */
+h1 {
+    color: #090909;
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+/* Seção central do menu */
+.Tabela {
+    width: 30%;
+    margin: 0 auto;
+    margin-top: 50px;
+    padding: 50px;
+    background-color: #f8f9fa;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Subtítulo da tabela */
+h2 {
+    color: #333;
+    margin-bottom: 20px;
+}
+
+/* Botões do menu de navegação */
+button {
+    padding: 10px 25px;
+    font-size: 16px;
+    color: #fff;
+    background-color: #007bff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 100%;
+    max-width: 200px;
+    margin-bottom: 15px;
+    transition: background-color 0.3s;
+}
+
+/* Hover dos botões */
+button:hover {
+    background-color: #0056b3;
+}
+
+/* Links que contêm os botões */
+a {
+    text-decoration: none;
+}

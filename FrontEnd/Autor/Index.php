@@ -14,7 +14,8 @@
         <div class="Info">
             <button><a href="Adicionar.html">Adicionar</a></button>
             <button><a href="Editar.html">Editar</a></button>      
-            <button><a href="Excluir.html">Excluir</a></button>             
+            <button><a href="Excluir.html">Excluir</a></button>   
+            <button><a href="../Menu de navegação/index.html">Menu</a></button>            
         </div>
         <br>
 
@@ -57,6 +58,7 @@
                 }
             ?>
         </table>
+      
     </div>
 </body>
 </html>

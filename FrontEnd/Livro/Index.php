@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="Index.css">
-    <title>Catalogo de Livros</title>
+    <title>Catálogo de Livros</title>
 </head>
 <body>
     <h1>Catálogo de Livros</h1>
@@ -15,7 +15,8 @@
         <div class="Info">
             <button><a href="Adicionar.html">Adicionar</a></button>
             <button><a href="Editar.html">Editar</a></button>      
-            <button><a href="Excluir.html">Excluir</a></button>             
+            <button><a href="Excluir.html">Excluir</a></button> 
+            <button><a href="../Menu de navegação/index.html">Menu</a></button>             
         </div>
         <br>
 
@@ -55,8 +56,8 @@
                         echo "<td style='text-align:center; width: 50%'>{$livros->Id_livro}</td>";
                         echo "<td style='text-align:center; width: 50%'>{$livros->nome_livro}</td>";
                         echo "<td style='text-align:center; width: 50%'>{$livros->data_publicacao}</td>";
-                        echo "<td style='text-align:center; width: 50%'>{$livros->Id_genero}</td>"; //Acho que vai ter que colocar tabela generos
-                        echo "<td style='text-align:center; width: 50%'>{$livros->Id_autor}</td>"; //Acho que vai ter que colocar tabela autores
+                        echo "<td style='text-align:center; width: 50%'>{$livros->Id_genero}</td>";
+                        echo "<td style='text-align:center; width: 50%'>{$livros->Id_autor}</td>";
                         echo "</tr>";
                     }
                 } else {
@@ -64,7 +65,7 @@
                 }
             ?>
         </table>
+        
     </div>
-    </div
 </body>
 </html>
