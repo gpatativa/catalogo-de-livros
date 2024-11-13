@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 07/11/2024 às 15:47
--- Versão do servidor: 10.4.32-MariaDB
--- Versão do PHP: 8.2.12
+-- Generation Time: Nov 13, 2024 at 11:46 AM
+-- Server version: 10.4.32-MariaDB
+-- PHP Version: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,13 +18,13 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Banco de dados: `catalogo_livros`
+-- Database: `catalogo_livros`
 --
 
 -- --------------------------------------------------------
 
 --
--- Estrutura para tabela `autores`
+-- Table structure for table `autores`
 --
 
 CREATE TABLE `autores` (
@@ -32,10 +32,18 @@ CREATE TABLE `autores` (
   `nome_autor` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `autores`
+--
+
+INSERT INTO `autores` (`Id_autor`, `nome_autor`) VALUES
+(2, 'teste'),
+(3, 'Banana Kong');
+
 -- --------------------------------------------------------
 
 --
--- Estrutura para tabela `generos`
+-- Table structure for table `generos`
 --
 
 CREATE TABLE `generos` (
@@ -44,7 +52,7 @@ CREATE TABLE `generos` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Despejando dados para a tabela `generos`
+-- Dumping data for table `generos`
 --
 
 INSERT INTO `generos` (`Id_genero`, `nome_genero`) VALUES
@@ -74,35 +82,43 @@ INSERT INTO `generos` (`Id_genero`, `nome_genero`) VALUES
 -- --------------------------------------------------------
 
 --
--- Estrutura para tabela `livros`
+-- Table structure for table `livros`
 --
 
 CREATE TABLE `livros` (
   `Id_livro` int(11) NOT NULL,
   `nome_livro` text NOT NULL,
-  `ano_publicacao` date NOT NULL,
+  `ano_publicacao` year(4) DEFAULT NULL,
   `Id_autor` int(11) NOT NULL,
   `Id_genero` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Índices para tabelas despejadas
+-- Dumping data for table `livros`
+--
+
+INSERT INTO `livros` (`Id_livro`, `nome_livro`, `ano_publicacao`, `Id_autor`, `Id_genero`) VALUES
+(3, 'teste', '0000', 2, 1),
+(4, 'Harry Potter', '1997', 3, 2);
+
+--
+-- Indexes for dumped tables
 --
 
 --
--- Índices de tabela `autores`
+-- Indexes for table `autores`
 --
 ALTER TABLE `autores`
   ADD PRIMARY KEY (`Id_autor`);
 
 --
--- Índices de tabela `generos`
+-- Indexes for table `generos`
 --
 ALTER TABLE `generos`
   ADD PRIMARY KEY (`Id_genero`);
 
 --
--- Índices de tabela `livros`
+-- Indexes for table `livros`
 --
 ALTER TABLE `livros`
   ADD PRIMARY KEY (`Id_livro`),
@@ -110,33 +126,33 @@ ALTER TABLE `livros`
   ADD KEY `fk_livro_genero` (`Id_genero`);
 
 --
--- AUTO_INCREMENT para tabelas despejadas
+-- AUTO_INCREMENT for dumped tables
 --
 
 --
--- AUTO_INCREMENT de tabela `autores`
+-- AUTO_INCREMENT for table `autores`
 --
 ALTER TABLE `autores`
-  MODIFY `Id_autor` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `Id_autor` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
--- AUTO_INCREMENT de tabela `generos`
+-- AUTO_INCREMENT for table `generos`
 --
 ALTER TABLE `generos`
   MODIFY `Id_genero` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 
 --
--- AUTO_INCREMENT de tabela `livros`
+-- AUTO_INCREMENT for table `livros`
 --
 ALTER TABLE `livros`
-  MODIFY `Id_livro` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `Id_livro` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
--- Restrições para tabelas despejadas
+-- Constraints for dumped tables
 --
 
 --
--- Restrições para tabelas `livros`
+-- Constraints for table `livros`
 --
 ALTER TABLE `livros`
   ADD CONSTRAINT `fk_livro_autor` FOREIGN KEY (`Id_autor`) REFERENCES `autores` (`Id_autor`),
