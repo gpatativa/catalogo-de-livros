@@ -1,49 +1,36 @@
 <?php
+// Habilitar exibição de erros para depuração (remova em produção)
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 
+// Conectar ao banco de dados
+require_once('Index.php');
+
+// Definir o cabeçalho para JSON
 header('Content-Type: application/json');
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    if (isset($_POST['api_token']) && $_POST['api_token'] == 'TokenTeste') {
-        require_once('Index.php'); 
+// Array para armazenar os livros
+$livros = [];
 
-        $query = '
-            SELECT livros.Id_livro, livros.nome_livro, livros.ano_publicacao, 
-                   generos.nome_genero, autores.nome_autor 
-            FROM livros
-            JOIN generos ON livros.Id_genero = generos.Id_genero
-            JOIN autores ON livros.Id_autor = autores.Id_autor
-        ';
-        
-        $stmt = mysqli_prepare($conn, $query);
+// SQL para selecionar todos os livros
+$sql = "SELECT livros.id, livros.nome_livro, livros.ano_publicacao, autores.nome_autor, generos.nome_genero 
+        FROM livros 
+        JOIN autores ON livros.Id_autor = autores.Id_autor 
+        JOIN generos ON livros.Id_genero = generos.Id_genero";
 
-        if ($stmt) {
-            mysqli_stmt_execute($stmt);
-            mysqli_stmt_bind_result($stmt, $Id_livro, $nome_livro, $ano_publicacao, $nome_genero, $nome_autor);
+$query = $conn->query($sql);
 
-            $response = array();
-
-            while (mysqli_stmt_fetch($stmt)) {
-                array_push($response, array(
-                    "Id_livro" => $Id_livro,
-                    "nome_livro" => $nome_livro,
-                    "ano_publicacao" => $ano_publicacao,
-                    "nome_genero" => $nome_genero,
-                    "nome_autor" => $nome_autor
-                ));
-            }
-
-            echo json_encode($response);
-            mysqli_stmt_close($stmt);
-        } else {
-            echo json_encode(array("error" => "Erro na preparação da consulta"));
-        }
-
-        mysqli_close($conn);
-    } else {
-        $response = array('auth_token' => false, 'message' => 'Token inválido.');
-        echo json_encode($response);
+if ($query) {
+    while ($row = $query->fetch_assoc()) {
+        $livros[] = $row;
     }
+    // Retornar os livros como JSON
+    echo json_encode($livros);
 } else {
-    echo json_encode(array("error" => "Método não suportado"));
+    echo json_encode(['sucesso' => false, 'erro' => 'Erro ao carregar livros.']);
 }
+
+// Fechar a conexão
+$conn->close();
 ?>

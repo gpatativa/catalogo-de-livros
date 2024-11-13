@@ -18,23 +18,18 @@
     
             <div class="Info">
                 <label for="ano_publicacao">Ano de publicação</label><br>
-                <input type="number" id="ano_publicacao" name="ano_publicacao" placeholder="aaaa" required>
+                <input type="number" id="ano_publicacao" name="ano_publicacao" min="1000" max="9999" placeholder="aaaa" required>
             </div>
+            
 
             <label for="Id_genero">Gênero</label>
             <select id="Id_genero" name="Id_genero" required>
                 <option value="" disabled selected>Selecione um gênero</option>
-                <option value="1">Fantasia</option>
-                    <option value="2">Ficção</option>
-                    <option value="3">Romance</option>
             </select><br><br>
 
             <label for="Id_autor">Autor</label>
             <select id="Id_autor" name="Id_autor" required>
                 <option value="" disabled selected>Selecione um autor</option>
-                <option value="1">Autor 1</option>
-                    <option value="2">Autor 2</option>
-                    <option value="3">Autor 3</option>
             </select><br><br>
 
             <a href="../Autor/Adicionar.html">Cadastrar autor</a><br><br>
@@ -51,26 +46,38 @@
     <script>
         // Carregar gêneros e autores ao carregar a página
         document.addEventListener('DOMContentLoaded', function() {
-            fetch('https://localhost/catalogo-de-livros/BackEnd/Livro/AdicionarLivro.php')
-                .then(response => response.json())
+            fetch('http://localhost/catalogo-de-livros/BackEnd/Livro/AdicionarLivro.php')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Erro na requisição');
+                    }
+                    return response.json();
+                })
                 .then(data => {
-                    // Popula o campo de gênero
-                    const generoSelect = document.getElementById('Id_genero');
-                    data.generos.forEach(genero => {
-                        let option = document.createElement('option');
-                        option.value = genero.Id_genero;
-                        option.textContent = genero.nome_genero;
-                        generoSelect.appendChild(option);
-                    });
+                    if (data.generos && data.autores) {
+                        // Popula o campo de gênero
+                        const generoSelect = document.getElementById('Id_genero');
+                        data.generos.forEach(genero => {
+                            let option = document.createElement('option');
+                            option.value = genero.Id_genero;
+                            option.textContent = genero.nome_genero;
+                            generoSelect.appendChild(option);
+                        });
 
-                    // Popula o campo de autor
-                    const autorSelect = document.getElementById('Id_autor');
-                    data.autores.forEach(autor => {
-                        let option = document.createElement('option');
-                        option.value = autor.Id_autor;
-                        option.textContent = autor.nome_autor;
-                        autorSelect.appendChild(option);
-                    });
+                        // Popula o campo de autor
+                        const autorSelect = document.getElementById('Id_autor');
+                        data.autores.forEach(autor => {
+                            let option = document.createElement('option');
+                            option.value = autor.Id_autor;
+                            option.textContent = autor.nome_autor;
+                            autorSelect.appendChild(option);
+                        });
+                    } else {
+                        throw new Error('Erro ao carregar dados');
+                    }
+                })
+                .catch(error => {
+                    console.error('Erro ao carregar gêneros e autores:', error);
                 });
         });
 
@@ -84,7 +91,7 @@
             const Id_autor = document.getElementById('Id_autor').value;
             
             // Enviar a requisição para adicionar o livro
-            fetch('https://localhost/catalogo-de-livros/BackEnd/Livro/AdicionarLivro.php', { 
+            fetch('http://localhost/catalogo-de-livros/BackEnd/Livro/AdicionarLivro.php', { 
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded'

@@ -31,7 +31,7 @@
 
             <?php
                 // Código para fazer a requisição ao back-end
-                $postdata = https_build_query(
+                $postdata = http_build_query(
                     array(
                         'api_token' => 'TokenTeste'
                     )
