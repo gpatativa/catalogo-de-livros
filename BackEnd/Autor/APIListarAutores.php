@@ -1,45 +1,41 @@
 <?php
+// Habilitar exibição de erros para depuração (remova em produção)
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 
-header('Content-Type: application/json');
+// Conectar ao banco de dados
+require_once('Index.php');
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $api_token = isset($_POST['api_token']) ? $_POST['api_token'] : null;
-    
-    if ($api_token == 'TokenTeste') {
-
-        require_once('Index.php'); // Certifique-se de que $conn está definido em Index.php
-
-        $query = 'SELECT Id_autor, nome_autor FROM autores';
-        $stmt = mysqli_prepare($conn, $query);
-
-        if ($stmt) {
-            mysqli_stmt_execute($stmt);
-            mysqli_stmt_bind_result($stmt, $Id_autor, $nome_autor);
-
-            $response = array();
-
-            while (mysqli_stmt_fetch($stmt)) {
-                array_push($response, array(           
-                    "Id_autor" => $Id_autor,
-                    "nome_autor" => $nome_autor
-                ));
-            }
-
-            echo json_encode($response);
-            mysqli_stmt_close($stmt);
-        } else {
-            echo json_encode(array("error" => "Erro ao preparar a consulta"));
-        }
-
-        mysqli_close($conn);
-
-    } else {
-        $response = array('auth_token' => false, 'message' => 'Token inválido.');
-        echo json_encode($response);
-    }
-} else {
-    $response = array('error' => 'Método não suportado, use POST.');
-    echo json_encode($response);
+// Verificar conexão com o banco de dados
+if ($conn->connect_error) {
+    echo json_encode(['sucesso' => false, 'erro' => 'Erro de conexão com o banco de dados: ' . $conn->connect_error]);
+    exit();
 }
 
+// Definir o cabeçalho para JSON
+header('Content-Type: application/json; charset=utf-8');
+
+// Array para armazenar os autores
+$autores = [];
+
+// SQL para selecionar todos os autores
+$sql = "SELECT Id_autor AS id_autor, nome_autor 
+        FROM autores";
+
+$query = $conn->query($sql);
+
+// Verificar se a consulta foi bem-sucedida
+if ($query) {
+    while ($row = $query->fetch_assoc()) {
+        $autores[] = $row;
+    }
+    // Retornar os autores como JSON
+    echo json_encode(['sucesso' => true, 'autores' => $autores], JSON_UNESCAPED_UNICODE);
+} else {
+    echo json_encode(['sucesso' => false, 'erro' => 'Erro ao carregar autores: ' . $conn->error]);
+}
+
+// Fechar a conexão
+$conn->close();
 ?>
