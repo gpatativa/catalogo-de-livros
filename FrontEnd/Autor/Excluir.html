@@ -7,10 +7,10 @@
     <title>Excluir Livro</title>
 </head>
 <body>
-    <h1>Exclua um livro pelo ID</h1>
+    <h1>Exclua um autor pelo ID</h1>
 
     <div class="Adicionar">
-        <form id="addForm">
+        <form id="deleteForm"> <!-- Corrigido o ID do formulário -->
             <div class="Info">
                 <label for="id">Id </label><br>
                 <input type="number" id="id" name="id" placeholder="Id do autor" required>
@@ -27,19 +27,25 @@
     </div>
 
     <script>
-        document.getElementById('addForm').addEventListener('submit', function(e) {
-            e.preventDefault(); // Evitar o envio padrão do formulário
+        document.getElementById('deleteForm').addEventListener('submit', function (e) {
+            e.preventDefault(); // Impede o envio padrão do formulário
 
             // Obter o valor do ID
             const id = document.getElementById('id').value;
 
-            // Enviar a requisição para excluir a pessoa
-            fetch('http://localhost/catalogo-de-livros/BackEnd/Autor/Excluir_autor.php', {
+            // Validar o ID antes de enviar
+            if (!id || id <= 0) {
+                document.getElementById('message').innerHTML = `<p style="color: red;">Por favor, insira um ID válido.</p>`;
+                return;
+            }
+
+            // Enviar a requisição para excluir o livro
+            fetch('https://localhost/catalogo-de-livros/BackEnd/Autor/Excluir_autor.php', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded'
                 },
-                body: new URLSearchParams({ id: id })
+                body: new URLSearchParams({ id })
             })
             .then(response => response.json())
             .then(result => {
@@ -47,13 +53,14 @@
                 const messageDiv = document.getElementById('message');
                 if (result.sucesso) {
                     messageDiv.innerHTML = `<p style="color: green;">${result.mensagem}</p>`;
+                    document.getElementById('deleteForm').reset();
                 } else {
                     messageDiv.innerHTML = `<p style="color: red;">${result.erro}</p>`;
                 }
             })
             .catch(error => {
                 console.error('Erro:', error);
-                document.getElementById('message').innerHTML = `<p style="color: red;">Ocorreu um erro ao excluir a pessoa.</p>`;
+                document.getElementById('message').innerHTML = `<p style="color: red;">Ocorreu um erro ao excluir o autor.</p>`;
             });
         });
     </script>

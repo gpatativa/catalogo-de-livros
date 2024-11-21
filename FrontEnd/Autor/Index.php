@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,53 +12,48 @@
 
     <div class="Tabela">
         <div class="Info">
+            <button><a href="../Menu de navegação/index.html">Menu</a></button> 
             <button><a href="Adicionar.html">Adicionar</a></button>
             <button><a href="Editar.html">Editar</a></button>      
             <button><a href="Excluir.html">Excluir</a></button>   
-            <button><a href="../Menu de navegação/index.html">Menu</a></button>            
         </div>
         <br>
 
         <table>
             <tr>
                 <th style="text-align:center; width: 50%">Id</th>
-                <th style="text-align:center; width: 50%">Nome do autor</th>
+                <th style="text-align:center; width: 50%">Nome do Autor</th>
             </tr>
-
-            <?php
-                // Código para fazer a requisição ao back-end
-                $postdata = http_build_query(
-                    array(
-                        'api_token' => 'TokenTeste'
-                    )
-                );
-                $opts = array('http' =>
-                    array(
-                        'method'  => 'POST',
-                        'header'  => 'Content-type: application/x-www-form-urlencoded',
-                        'content' => $postdata
-                    )
-                );
-                $context  = stream_context_create($opts);
-                $result = file_get_contents('http://localhost/catalogo-de-livros/BackEnd/Autor/APIListarAutores.php', false, $context);
-
-                // Decodifica a resposta JSON
-                $jsonObj = json_decode($result);
-
-                if ($jsonObj) {
-                    // Itera sobre os dados e os exibe na tabela
-                    foreach ($jsonObj as $autor) {  // Cada item JSON é um autor
-                        echo "<tr>";
-                        echo "<td style='text-align:center; width: 50%'>{$autor->Id_autor}</td>";
-                        echo "<td style='text-align:center; width: 50%'>{$autor->nome_autor}</td>";
-                        echo "</tr>";
-                    }
-                } else {
-                    echo "<tr><td colspan='2'>Erro ao carregar dados.</td></tr>";
-                }
-            ?>
         </table>
-      
+
+        <script>
+            // Função para carregar os dados da API
+            async function carregarAutores() {
+                try {
+                    const response = await fetch('https://localhost/catalogo-de-livros/BackEnd/Autor/APIListarAutores.php');
+                    const data = await response.json();
+
+                    if (data.sucesso) {
+                        const table = document.querySelector('table');
+                        data.autores.forEach(autor => {
+                            const row = document.createElement('tr');
+                            row.innerHTML = `
+                                <td style="text-align:center; width: 50%">${autor.id_autor}</td>
+                                <td style="text-align:center; width: 50%">${autor.nome_autor}</td>
+                            `;
+                            table.appendChild(row);
+                        });
+                    } else {
+                        alert('Erro ao carregar autores: ' + data.erro);
+                    }
+                } catch (error) {
+                    alert('Erro ao conectar à API: ' + error.message);
+                }
+            }
+
+            // Chama a função ao carregar a página
+            carregarAutores();
+        </script>
     </div>
 </body>
 </html>

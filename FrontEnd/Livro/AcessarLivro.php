@@ -12,7 +12,7 @@
         )
     );
         $context = stream_context_create($opts);
-        $result = file_get_contents ('https://localhost/CatalogoLivros/BackEnd/Livro/APIListarLivros.php', false, $context);
+        $result = file_get_contents ('https://localhost/catalogo-de-livros/BackEnd/Livro/APIListarLivros.php', false, $context);
 
         $jsonObj = json_decode ($result);
 

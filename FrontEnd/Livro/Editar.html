@@ -26,27 +26,15 @@
                 <input type="number" id="ano_publicacao" name="ano_publicacao" required>
             </div>
 
-            <div class="Info">
-                <label for="genero">Gênero</label>
-                <select id="genero" name="genero" required>
-                    <option value="" disabled selected>Selecione um gênero</option>
-                    <!-- Adicione os gêneros reais aqui -->
-                    <option value="1">Fantasia</option>
-                    <option value="2">Ficção</option>
-                    <option value="3">Romance</option>
-                </select>
-            </div>
+            <label for="Id_genero">Gênero</label>
+            <select id="Id_genero" name="Id_genero" required>
+                <option value="" disabled selected>Selecione um gênero</option>
+            </select><br><br>
 
-            <div class="Info">
-                <label for="autor">Autor</label>
-                <select id="autor" name="autor" required>
-                    <option value="" disabled selected>Selecione um autor</option>
-                    <!-- Adicione os autores reais aqui -->
-                    <option value="1">Autor 1</option>
-                    <option value="2">Autor 2</option>
-                    <option value="3">Autor 3</option>
-                </select>
-            </div>
+            <label for="Id_autor">Autor</label>
+            <select id="Id_autor" name="Id_autor" required>
+                <option value="" disabled selected>Selecione um autor</option>
+            </select><br><br>
 
             <!-- Link para cadastrar autor -->
             <a href="../Autor/Adicionar.html">Cadastrar autor</a> <br> <br>
@@ -62,47 +50,116 @@
     </div>
 
     <script>
+        // Carregar dados do livro ao preencher o campo ID
+        document.getElementById('id').addEventListener('blur', function() {
+            const id = document.getElementById('id').value;
+            console.log("ID do livro:", id);  // Verifique se o ID está correto aqui
+
+            if (id) {
+                fetch(`https://localhost/catalogo-de-livros/BackEnd/Livro/ObterLivro.php?id=${id}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log(data);  // Verifique o retorno da API para depuração
+                        if (data.sucesso && data.livro) {
+                            const livro = data.livro;
+                            document.getElementById('nome_livro').value = livro.nome_livro;
+                            document.getElementById('ano_publicacao').value = livro.ano_publicacao;
+
+                            // Selecionar o gênero e autor
+                            document.getElementById('Id_genero').value = livro.Id_genero;
+                            document.getElementById('Id_autor').value = livro.Id_autor;
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Erro ao carregar o livro:', error);
+                    });
+            }
+        });
+
+        // Carregar gêneros e autores ao carregar a página
+        document.addEventListener('DOMContentLoaded', function() {
+            fetch('https://localhost/catalogo-de-livros/BackEnd/Livro/AdicionarLivro.php')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Erro na requisição');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.generos && data.autores) {
+                        // Popula o campo de gênero
+                        const generoSelect = document.getElementById('Id_genero');
+                        data.generos.forEach(genero => {
+                            let option = document.createElement('option');
+                            option.value = genero.Id_genero;
+                            option.textContent = genero.nome_genero;
+                            generoSelect.appendChild(option);
+                        });
+
+                        // Popula o campo de autor
+                        const autorSelect = document.getElementById('Id_autor');
+                        data.autores.forEach(autor => {
+                            let option = document.createElement('option');
+                            option.value = autor.Id_autor;
+                            option.textContent = autor.nome_autor;
+                            autorSelect.appendChild(option);
+                        });
+                    } else {
+                        throw new Error('Erro ao carregar dados');
+                    }
+                })
+                .catch(error => {
+                    console.error('Erro ao carregar gêneros e autores:', error);
+                });
+        });
+
+        // Enviar os dados para salvar a edição do livro
         document.getElementById('editForm').addEventListener('submit', function(e) {
-            e.preventDefault(); // Evitar o envio padrão do formulário
+            e.preventDefault(); // Evitar envio padrão do formulário
 
             // Obter os dados do formulário
-            const id = document.getElementById('id').value;
-            const nome_livro = document.getElementById('nome_livro').value;
-            const ano_publicacao = document.getElementById('ano_publicacao').value;
-            const genero = document.getElementById('genero').value;
-            const autor = document.getElementById('autor').value;
+            const id = document.getElementById('id').value.trim();
+            const nome_livro = document.getElementById('nome_livro').value.trim();
+            const ano_publicacao = document.getElementById('ano_publicacao').value.trim();
+            const genero = document.getElementById('Id_genero').value;
+            const autor = document.getElementById('Id_autor').value;
+
+            if (!id || !nome_livro || !ano_publicacao || !genero || !autor) {
+                document.getElementById('message').innerHTML = `<p style="color: red;">Preencha todos os campos.</p>`;
+                return;
+            }
 
             // Criar o objeto com os dados para a requisição PUT
             const data = {
-                id: id,
+                id: parseInt(id),
                 nome_livro: nome_livro,
-                ano_publicacao: ano_publicacao,
-                Id_genero: genero,
-                Id_autor: autor
+                ano_publicacao: parseInt(ano_publicacao),
+                Id_genero: parseInt(genero),
+                Id_autor: parseInt(autor)
             };
 
             // Enviar os dados via PUT usando Fetch API
-            fetch('http://localhost/catalogo-de-livros/BackEnd/Livro/Editar_livro.php', {
+            fetch('https://localhost/catalogo-de-livros/BackEnd/Livro/Editar_livro.php', {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify(data)
             })
-            .then(response => response.json())
-            .then(result => {
-                // Exibir a mensagem de sucesso ou erro
-                const messageDiv = document.getElementById('message');
-                if (result.sucesso) {
-                    messageDiv.innerHTML = `<p style="color: green;">${result.mensagem}</p>`;
-                } else {
-                    messageDiv.innerHTML = `<p style="color: red;">${result.erro}</p>`;
-                }
-            })
-            .catch(error => {
-                console.error('Erro:', error);
-                document.getElementById('message').innerHTML = `<p style="color: red;">Ocorreu um erro ao tentar editar o livro.</p>`;
-            });
+                .then(response => response.json())
+                .then(result => {
+                    // Exibir a mensagem de sucesso ou erro
+                    const messageDiv = document.getElementById('message');
+                    if (result.sucesso) {
+                        messageDiv.innerHTML = `<p style="color: green;">${result.mensagem}</p>`;
+                    } else {
+                        messageDiv.innerHTML = `<p style="color: red;">${result.erro}</p>`;
+                    }
+                })
+                .catch(error => {
+                    console.error('Erro:', error);
+                    document.getElementById('message').innerHTML = `<p style="color: red;">Ocorreu um erro ao tentar editar o livro.</p>`;
+                });
         });
     </script>
 </body>

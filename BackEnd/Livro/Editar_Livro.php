@@ -1,46 +1,43 @@
 <?php
+require_once('Index.php'); // Conexão com o banco de dados
+header('Content-Type: application/json; charset=utf-8');
 
-// Incluir a conexão com o banco de dados
-require_once('Index.php');
+// Verificar o método da requisição
+if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
+    $input = json_decode(file_get_contents('php://input'), true);
 
-// Verificar se o método é PUT
-if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
+    // Verificar se todos os campos obrigatórios estão presentes
+    if (
+        isset($input['id'], $input['nome_livro'], $input['ano_publicacao'], $input['Id_genero'], $input['Id_autor'])
+    ) {
+        $id = intval($input['id']);
+        $nome_livro = $input['nome_livro'];
+        $ano_publicacao = intval($input['ano_publicacao']);
+        $Id_genero = intval($input['Id_genero']);
+        $Id_autor = intval($input['Id_autor']);
 
-    // Pegar o conteúdo da requisição PUT
-    $input = file_get_contents("php://input");
-    $data = json_decode($input, true); // Decodifica o JSON recebido
-
-    // Verificar se o ID, nome, ano de publicação, gênero e autor foram passados
-    if (isset($data['id']) && isset($data['nome_livro']) && isset($data['ano_publicacao']) && isset($data['Id_genero']) && isset($data['Id_autor'])) {
-        $id = $data['id'];
-        $nome = $data['nome_livro'];
-        $ano_publicacao = $data['ano_publicacao'];
-        $genero = $data['Id_genero'];
-        $autor = $data['Id_autor'];
-
-        // SQL para atualizar o registro
+        // Atualizar o livro no banco
         $sql = "UPDATE livros SET nome_livro = ?, ano_publicacao = ?, Id_genero = ?, Id_autor = ? WHERE Id_livro = ?";
-
-        // Preparar a consulta SQL
         $stmt = $conn->prepare($sql);
-        $stmt->bind_param("ssiii", $nome, $ano_publicacao, $genero, $autor, $id);
+        $stmt->bind_param("siiii", $nome_livro, $ano_publicacao, $Id_genero, $Id_autor, $id);
 
-        // Executar a consulta e verificar o resultado
         if ($stmt->execute()) {
-            echo json_encode(['sucesso' => true, 'mensagem' => 'Registro atualizado com sucesso!']);
+            if ($stmt->affected_rows > 0) {
+                echo json_encode(['sucesso' => true, 'mensagem' => 'Livro atualizado com sucesso.']);
+            } else {
+                echo json_encode(['sucesso' => false, 'erro' => 'Nenhuma alteração foi feita no livro.']);
+            }
         } else {
-            echo json_encode(['sucesso' => false, 'erro' => 'Falha ao atualizar o registro.']);
+            echo json_encode(['sucesso' => false, 'erro' => 'Erro ao atualizar o livro: ' . $stmt->error]);
         }
 
         $stmt->close();
     } else {
-        echo json_encode(['sucesso' => false, 'erro' => 'Dados incompletos. Necessário passar todos os dados.']);
+        echo json_encode(['sucesso' => false, 'erro' => 'Dados insuficientes para a atualização.']);
     }
-
 } else {
-    echo json_encode(['sucesso' => false, 'erro' => 'Método HTTP inválido. Use PUT.']);
+    echo json_encode(['sucesso' => false, 'erro' => 'Método não permitido. Use PUT.']);
 }
 
-// Fechar a conexão com o banco de dados
 $conn->close();
 ?>
